@@ -5,6 +5,9 @@
 # Install php dependencies
 composer update
 
+# Create Sqlite database
+touch ./var/data.db
+
 # Serve Application
 symfony server:start
 ```
