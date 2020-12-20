@@ -3,7 +3,11 @@
 {% block title %}Question: {{ question }}{% endblock %}
 
 {% block body %}
-    <div class="container text-center">
+    <div class="container text-center bg-primary text-dark">
         <h1>{{ question }}</h1>
+        <h3>{{ description | raw }}</h3>
+        {% for answer in answers %}
+            <p>{{ answer | markdown }}</p>
+        {% endfor %}
     </div>
 {% endblock %}
