@@ -1,0 +1,2 @@
+monolog:
+  channels: [markdown] # Way to create our own custom channel for monolog Service
