@@ -8,11 +8,19 @@
         <h3 class="alert alert-info">{{ question.question }}</h3>
         <h4 class="alert alert-success">
             {% if question.askedAt %}
-               Asked {{ question.askedAt | ago }}
+                Asked {{ question.askedAt | ago }}
             {% else %}
-
+                (unpublished)
             {% endif %}
         </h4>
+
+        <form class="alert alert-secondary" action="{{ path("app_question_post", { slug: question.slug}) }}"
+              method="post">
+            Votes: {{ question.votesString }}
+            <button class="btn btn-outline-success" name="direction" value="up">Up</button>
+            <button class="btn btn-outline-danger" name="direction" value="down">Down</button>
+        </form>
+
         <ul class="list-group">
             {% for answer in answers %}
                 <li class="list-group-item alert alert-success">{{ answer | markdown }}</li>

@@ -3,11 +3,12 @@
 namespace App\Controller;
 
 use App\Entity\Question;
-use App\Service\MarkdownHelper;
+use App\Repository\QuestionRepository;
 use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
 use Exception;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
@@ -15,11 +16,16 @@ class QuestionController extends AbstractController
 {
     /**
      * @Route("/", name="app_homepage")
+     * @param QuestionRepository $questionRepository
      * @return Response
      */
-    public function homepage(): Response
+    public function homepage(QuestionRepository $questionRepository): Response
     {
-        return $this->render('question/homepage.html.twig');
+        $questions = $questionRepository->findAllByAskedOrderedByNewest();
+
+        return $this->render('question/homepage.html.twig', [
+            'questions' => $questions
+        ]);
     }
 
     /**
@@ -38,33 +44,23 @@ class QuestionController extends AbstractController
         if (rand(1, 10) > 2) {
             $question->setAskedAt(new DateTime(sprintf('-%d days', rand(1, 100))));
         }
+        $question->setVotes(rand(-20, 50));
+
         $entityManager->persist($question);
         $entityManager->flush();
 
-        return new Response(sprintf('Well!! The question with id #%d and slug %s got saved',
-            $question->getId(), $question->getSlug()));
+        return $this->render('question/new.html.twig', [
+            'question' => $question
+        ]);
     }
 
     /**
      * @Route("/questions/{slug}", name="app_question_show")
-     * @param                $slug
-     * @param MarkdownHelper $markdownHelper
+     * @param Question $question
      * @return Response
      */
-    public function show(
-        $slug,
-        MarkdownHelper $markdownHelper,
-        EntityManagerInterface $entityManager
-    ): Response
+    public function show(Question $question): Response
     {
-        $repository = $entityManager->getRepository(Question::class);
-
-        /** @var Question|null $question */
-        $question = $repository->findOneBy(['slug' => $slug]);
-
-        if(!$question){
-            throw $this->createNotFoundException(sprintf('no question found related to "%s"', $slug));
-        }
         $answers = [
             'Answer1 to the `Question`',
             'Answer2 to the `Question`',
@@ -75,6 +71,31 @@ class QuestionController extends AbstractController
         return $this->render('question/show.html.twig', [
             'question' => $question,
             'answers' => $answers
+        ]);
+    }
+
+    /**
+     * @Route("/questions/{slug}/vote", name="app_question_post", methods="POST")
+     * @param Question               $question
+     * @param Request                $request
+     * @param EntityManagerInterface $entityManager
+     */
+    public function questionVote(
+        Question $question,
+        Request $request,
+        EntityManagerInterface $entityManager)
+    {
+        $direction = $request->request->get('direction');
+
+        if ($direction === 'up') {
+            $question->upVote();
+        } else {
+            $question->downVote();
+        }
+        $entityManager->flush();
+
+        return $this->redirectToRoute('app_question_show', [
+            'slug' => $question->getSlug()
         ]);
     }
 }
