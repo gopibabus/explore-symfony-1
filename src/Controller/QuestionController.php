@@ -36,21 +36,8 @@ class QuestionController extends AbstractController
      */
     public function new(EntityManagerInterface $entityManager): Response
     {
-        $question = new Question();
-        $question->setName('Missing pants')
-            ->setSlug('missing-pants-' . rand(1, 1000))
-            ->setQuestion('Missing pants Question');
-
-        if (rand(1, 10) > 2) {
-            $question->setAskedAt(new DateTime(sprintf('-%d days', rand(1, 100))));
-        }
-        $question->setVotes(rand(-20, 50));
-
-        $entityManager->persist($question);
-        $entityManager->flush();
-
         return $this->render('question/new.html.twig', [
-            'question' => $question
+            'question' => null
         ]);
     }
 

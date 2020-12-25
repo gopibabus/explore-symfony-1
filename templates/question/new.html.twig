@@ -4,6 +4,10 @@
 
 {% block body %}
     <div class="container text-center alert alert-success mt-5" role="alert">
-        Well!! The question with id {{ question.id }} and slug {{ question.slug }} got saved 😀
+        {% if question %}
+            Well!! The question with id {{ question.id }} and slug {{ question.slug }} got saved 😀
+            {% else %}
+            This Sounds like a new shiny feature that we can deal with Symfony Forms!!
+        {% endif %}
     </div>
 {% endblock %}
