@@ -7,6 +7,7 @@ use App\Repository\QuestionRepository;
 use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
 use Exception;
+use Psr\Log\LoggerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -14,6 +15,13 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class QuestionController extends AbstractController
 {
+    private $logger;
+
+    public function __construct(LoggerInterface $logger)
+    {
+        $this->logger = $logger;
+    }
+
     /**
      * @Route("/", name="app_homepage")
      * @param QuestionRepository $questionRepository
@@ -22,6 +30,7 @@ class QuestionController extends AbstractController
     public function homepage(QuestionRepository $questionRepository): Response
     {
         $questions = $questionRepository->findAllByAskedOrderedByNewest();
+        $this->logger->info("Called Inside Controller");
 
         return $this->render('question/homepage.html.twig', [
             'questions' => $questions

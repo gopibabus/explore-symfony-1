@@ -39,10 +39,10 @@ class MarkdownHelper
         $this->logger = $mdLogger;
     }
 
-    public function parse(string $source)
+    public function parse(string $source): string
     {
         if(stripos($source, 'cat') === false){
-            $this->logger->info('Sample Logger Info');
+            $this->logger->info('Logger Info from MarkdownHelper!!');
         }
         if($this->isDebug){
             return $this->markdownParser->transformMarkdown($source);
