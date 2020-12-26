@@ -29,7 +29,7 @@ class QuestionController extends AbstractController
     }
 
     /**
-     * @Route("/questions/new")
+     * @Route("/questions/new", )
      * @param EntityManagerInterface $entityManager
      * @return Response
      * @throws Exception
