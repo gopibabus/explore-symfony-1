@@ -1,5 +1,10 @@
 ![Symfony Concepts](./assets/images/banner.png)
 
+### Topics Explored
+
+* Symfony Fundamentals(Services, Configs & Environments)
+* Doctrine Basics
+
 ### How to Set up and run the Application
 ```bash
 # Copy Config
@@ -17,9 +22,9 @@ php bin/console make:database
 
 # Migrate data to database
 php bin/console doctrine:migrations:migrate
- 
+
 # Update Database with Dummy Data
-php bin/console doctrine:fixtures:load 
+php bin/console doctrine:fixtures:load
 
 # Serve Application
 symfony server:start
