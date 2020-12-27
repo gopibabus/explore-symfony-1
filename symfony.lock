@@ -1,4 +1,21 @@
 {
+    "api-platform/api-pack": {
+        "version": "v1.3.0"
+    },
+    "api-platform/core": {
+        "version": "2.5",
+        "recipe": {
+            "repo": "github.com/symfony/recipes",
+            "branch": "master",
+            "version": "2.5",
+            "ref": "a93061567140e386f107be75340ac2aee3f86cbf"
+        },
+        "files": [
+            "config/packages/api_platform.yaml",
+            "config/routes/api_platform.yaml",
+            "src/Entity/.gitignore"
+        ]
+    },
     "behat/transliterator": {
         "version": "v1.3.0"
     },
@@ -105,6 +122,12 @@
     "fakerphp/faker": {
         "version": "v1.13.0"
     },
+    "fig/link-util": {
+        "version": "1.1.1"
+    },
+    "friendsofphp/proxy-manager-lts": {
+        "version": "v1.0.0"
+    },
     "gedmo/doctrine-extensions": {
         "version": "v3.0.0"
     },
@@ -141,11 +164,20 @@
     "monolog/monolog": {
         "version": "2.2.0"
     },
+    "nelmio/cors-bundle": {
+        "version": "1.5",
+        "recipe": {
+            "repo": "github.com/symfony/recipes",
+            "branch": "master",
+            "version": "1.5",
+            "ref": "6388de23860284db9acce0a7a5d9d13153bcb571"
+        },
+        "files": [
+            "config/packages/nelmio_cors.yaml"
+        ]
+    },
     "nikic/php-parser": {
         "version": "v4.10.3"
-    },
-    "ocramius/proxy-manager": {
-        "version": "2.10.0"
     },
     "php-http/client-common": {
         "version": "2.3.0"
@@ -506,6 +538,9 @@
     "symfony/property-info": {
         "version": "v5.2.0"
     },
+    "symfony/proxy-manager-bridge": {
+        "version": "v5.2.1"
+    },
     "symfony/routing": {
         "version": "5.1",
         "recipe": {
@@ -665,11 +700,11 @@
     "twig/twig": {
         "version": "v3.1.1"
     },
-    "webimpress/safe-writer": {
-        "version": "2.1.0"
-    },
     "webmozart/assert": {
         "version": "1.9.1"
+    },
+    "willdurand/negotiation": {
+        "version": "3.0.0"
     },
     "zenstruck/foundry": {
         "version": "v1.6.0"
