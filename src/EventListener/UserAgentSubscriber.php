@@ -1,4 +1,5 @@
 <?php
+
 namespace App\EventListener;
 
 use Psr\Log\LoggerInterface;
@@ -14,17 +15,31 @@ class UserAgentSubscriber implements EventSubscriberInterface
         $this->logger = $logger;
     }
 
-    public function onKernelRequest(RequestEvent $requestEvent)
-    {
-        $request = $requestEvent->getRequest();
-        $userAgent = $request->headers->get('User-Agent');
-        $this->logger->info(sprintf('The user Agent is "%s"', $userAgent));
-    }
-
     public static function getSubscribedEvents()
     {
         return [
             RequestEvent::class => 'onKernelRequest'
         ];
+    }
+
+    public function onKernelRequest(RequestEvent $requestEvent)
+    {
+        if (!$requestEvent->isMasterRequest()) {
+            return;
+        }
+        $request = $requestEvent->getRequest();
+
+        //This is the way we hack controller
+        /*$request->attributes->set('_controller', function($slug = null){
+            return new Response('This is the way we hack to display our custom Controller Output');
+        });*/
+
+        $userAgent = $request->headers->get('User-Agent');
+        $this->logger->info(sprintf('The user Agent is "%s"', $userAgent));
+
+        /*
+        $isMac = stripos($userAgent, 'Mac') !== false;
+        $request->attributes->set('isMac', $isMac);
+        */
     }
 }

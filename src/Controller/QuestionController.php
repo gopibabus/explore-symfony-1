@@ -9,8 +9,10 @@ use Doctrine\ORM\EntityManagerInterface;
 use Exception;
 use Psr\Log\LoggerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\HttpKernelInterface;
 use Symfony\Component\Routing\Annotation\Route;
 
 class QuestionController extends AbstractController
@@ -24,16 +26,32 @@ class QuestionController extends AbstractController
 
     /**
      * @Route("/", name="app_homepage")
-     * @param QuestionRepository $questionRepository
+     * @param QuestionRepository  $questionRepository
+     * @param string              $isMac
+     * @param HttpKernelInterface $httpKernel
      * @return Response
+     * @throws Exception
      */
-    public function homepage(QuestionRepository $questionRepository): Response
+    public function homepage(
+        QuestionRepository $questionRepository,
+        string $isMac,
+        HttpKernelInterface $httpKernel
+    ): Response
     {
         $questions = $questionRepository->findAllByAskedOrderedByNewest();
         $this->logger->info("Called Inside Controller");
 
+        //Manual SubRequest
+        $request = new Request();
+        $request->attributes->set('_controller', 'App\\Controller\\QuestionController::subRequestFooter');
+        $request->server->set('REMOTE_ADDR', '127.0.0.1');
+        $response = $httpKernel->handle($request, HttpKernelInterface::SUB_REQUEST);
+
+
         return $this->render('question/homepage.html.twig', [
-            'questions' => $questions
+            'questions' => $questions,
+            'isMac' => $isMac,
+            'subRequestBody' => $response->getContent()
         ]);
     }
 
@@ -75,6 +93,7 @@ class QuestionController extends AbstractController
      * @param Question               $question
      * @param Request                $request
      * @param EntityManagerInterface $entityManager
+     * @return RedirectResponse
      */
     public function questionVote(
         Question $question,
@@ -92,6 +111,16 @@ class QuestionController extends AbstractController
 
         return $this->redirectToRoute('app_question_show', [
             'slug' => $question->getSlug()
+        ]);
+    }
+
+    /**
+     * @return Response
+     */
+    public function subRequestFooter(): Response
+    {
+        return $this->render('question/sub.html.twig', [
+            'data' => 'This is a SubRequest demo from Question Controller'
         ]);
     }
 }

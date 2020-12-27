@@ -20,6 +20,11 @@
             </ul>
         {% endfor %}
     </div>
+    {% if subRequestBody %}
+            {{ subRequestBody | raw }}
+        {% else %}
+            {{ render(controller('App\\Controller\\QuestionController::subRequestFooter')) }}
+    {% endif %}
 {% endblock %}
 
 {% block javascripts %}
